@@ -14,7 +14,7 @@ persist_with: fernando_thesis_default_datagroup
 
 #Base explores
 explore: order_items {
-  group_label: "TSR Thesis - Ecommerce"
+  group_label: "Fernando Thesis - Ecommerce"
   label: "Order Items"
   view_name: order_items
 
@@ -63,7 +63,7 @@ explore: order_items {
 #Carbon Cruncher Explores
 
 explore: co2 {
-  hidden: yes
+  hidden: no
   label: "Carbon Cruncher"
   extends: [order_items]
   view_name: order_items

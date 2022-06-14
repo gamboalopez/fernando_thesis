@@ -45,6 +45,12 @@ view: products {
     drill_fields: [category, item_name]
   }
 
+  dimension: item_name_new{
+    type: string
+    label: "Product Name NEW"
+    sql: ${TABLE}.name ;;
+  }
+
   dimension: retail_price {
     type: number
     sql: ${TABLE}.retail_price ;;

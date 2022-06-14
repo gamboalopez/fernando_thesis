@@ -117,6 +117,7 @@ view: order_items {
 ########## Logistics ##########
 
   dimension: status {
+    label: "Status Now"
     sql: ${TABLE}.status ;;
   }
 

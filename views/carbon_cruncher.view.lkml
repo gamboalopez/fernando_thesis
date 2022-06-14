@@ -82,7 +82,7 @@ view: carbon_cruncher {
 
   measure: carbon_footprint_with_tgm {
     label: "CO2e Footprint (kg)"
-    type: string
+    type: number
     html: {{carbon_footprint_backend._linked_value}} ;;
     sql: {% if order_items.total_gross_margin._in_query %}
           CONCAT(CAST(${carbon_footprint_backend} AS STRING),',',CAST(${order_items.total_gross_margin} AS STRING))
