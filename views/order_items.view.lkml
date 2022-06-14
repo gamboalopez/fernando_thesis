@@ -117,8 +117,19 @@ view: order_items {
 ########## Logistics ##########
 
   dimension: status {
+    description: "Modified label for thesis"
     label: "Status Now"
     sql: ${TABLE}.status ;;
+    html: {% if value == 'Shipped' or value == 'Complete' %}
+    <p><img src="http://findicons.com/files/icons/573/must_have/48/check.png" height=20 width=20>{{ rendered_value }}</p>
+    {% elsif value == 'Processing' %}
+    <p><img src="http://findicons.com/files/icons/1681/siena/128/clock_blue.png" height=20 width=20>{{ rendered_value }}</p>
+    {% elsif value == 'Returned' %}
+    <p><img src="https://findicons.com/files/icons/1681/siena/128/undo_blue.png" height=20 width=20>{{ rendered_value }}</p>
+    {% else %}
+    <p><img src="http://findicons.com/files/icons/719/crystal_clear_actions/64/cancel.png" height=20 width=20>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
   dimension: days_to_process {
@@ -417,7 +428,24 @@ view: order_items {
     drill_fields: [users.traffic_source, user_order_facts.average_lifetime_revenue, user_order_facts.average_lifetime_orders]
   }
 
+########## Parameters ##########
+  parameter: different_counts{
+    type: unquoted
+    allowed_value: {
+      label: "Brand Count"
+      value: "brand_count"
+    }
+    allowed_value: {
+      label: "Order Count"
+      value: "order_count"
+    }
+  }
 
+    measure: dynamic_count {
+      type: count_distinct
+      sql: ${TABLE}.{% parameter different_counts %} ;;
+      value_format_name: "decimal_0"
+    }
 
 
 ########## Sets ##########
