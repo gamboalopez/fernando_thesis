@@ -429,22 +429,27 @@ view: order_items {
   }
 
 ########## Parameters ##########
-  parameter: different_counts{
+  parameter: using_parameters{
+    default_value: "Blue"
     type: unquoted
     allowed_value: {
-      label: "Brand Count"
-      value: "brand_count"
+      label: "Blue"
+      value: "blue"
     }
     allowed_value: {
-      label: "Order Count"
-      value: "order_count"
+      label: "Green"
+      value: "green"
     }
   }
 
-    measure: dynamic_count {
+    measure: dynamic_parameter {
       type: count_distinct
-      sql: ${TABLE}.{% parameter different_counts %} ;;
-      value_format_name: "decimal_0"
+      sql: ${order_id};;
+      html: {% if using_parameters._parameter_value == 'blue' %}
+              <p style="color: blue">{{ rendered_value }}</p>
+            {% else %}
+              <<p style="color: green">{{ rendered_value }}</p>
+            {% endif %} ;;
     }
 
 
