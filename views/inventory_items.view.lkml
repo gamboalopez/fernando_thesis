@@ -10,6 +10,7 @@ view: inventory_items {
 
   dimension: cost {
     type: number
+    label: "Cost"
     value_format_name: usd
     sql: ${TABLE}.cost ;;
   }
