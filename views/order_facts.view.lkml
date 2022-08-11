@@ -58,6 +58,18 @@ view: order_facts {
     value_format_name: usd
   }
 
+  dimension: test_color {
+    type: number
+    sql:  ${order_gross_margin} ;;
+    value_format_name: decimal_1
+    html: {% if order_gross_margin._rendered_value < order_cost._rendered_value %}
+            <p style="background-color: #B32F37; color:white"> {{ rendered_value }} </p>
+          {% else %}
+            <p>{{ rendered_value }}</p>
+          {% endif %};;
+
+  }
+
 
   dimension: order_sequence_number {
     type: number

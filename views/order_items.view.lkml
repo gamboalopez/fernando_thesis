@@ -2,6 +2,33 @@ view: order_items {
   sql_table_name: absolve.order_items ;;
   ########## IDs, Foreign Keys, Counts ###########
 
+
+  dimension: is_top_10 {
+    type: yesno
+    sql:
+    exists(
+      select *
+      from (
+        select status
+        from order_items
+        group by status
+        order by sum(sale_price) desc
+        limit 10
+      ) top_10
+      where ${status} = top_10.status
+    ) ;;
+  }
+
+  parameter: max_rank {
+    type: number
+  }
+
+  dimension: rank_limit {
+    type: number
+    sql: {% parameter max_rank %} ;;
+  }
+
+
   dimension: id {
     primary_key: yes
     type: number
@@ -57,8 +84,9 @@ view: order_items {
 
   dimension: order_id {
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.order_id ;;
+    # pivots: [orders.traffic_source]
   }
 
   ########## Time Dimensions ##########
@@ -68,6 +96,7 @@ view: order_items {
     timeframes: [time, date, week, month, raw]
     sql: ${TABLE}.returned_at ;;
   }
+
 
   dimension_group: shipped {
     type: time
@@ -87,6 +116,33 @@ view: order_items {
     timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, month_name, raw, week_of_year]
     sql: CAST(${TABLE}.created_at AS TIMESTAMP) ;;
   }
+
+    dimension: last_updated_date_interim {
+      type: number
+      hidden: no
+      sql: (SELECT DISTINCT user_id FROM absolve.order_items);;
+    }
+
+    dimension: last_updated_date_interim_2 {
+      type: number
+      hidden: no
+      sql: (SELECT id, max(${TABLE}.created_date) OVER(PARTITION BY id) FROM absolve.order_items);;
+    }
+
+    dimension: last_updated_date_interim_3 {
+      type: string
+      hidden: yes
+      sql: (SELECT MAX(created_date) FROM "absolve"."order_items");;
+    }
+    dimension: last_updated_date_filter {
+      type: yesno
+      sql:  ${last_updated_date_interim}::date = ${created_date};;
+    }
+
+    measure: last_updated_datetime {
+      sql: MAX(${TABLE}.created_at) ;;
+    }
+
 
   dimension: reporting_period {
     group_label: "Order Date"

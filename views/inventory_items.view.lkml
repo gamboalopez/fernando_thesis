@@ -32,6 +32,7 @@ view: inventory_items {
     datatype: timestamp
     timeframes: [time, date, week, month, raw]
     sql: CAST(${TABLE}.sold_at AS timestamp) ;;
+    # value_format: "dd-mm-yyyy"
   }
 
   dimension: is_sold {
